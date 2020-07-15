@@ -11,7 +11,6 @@ FILE = 'ob_EC.csv'
 
 equipment = []
 
-
 '''получаем html'''
 def get_html (url, params=None):
     r = requests.get(url, headers=HEADERS, params=params)
@@ -25,14 +24,30 @@ def get_pages_count(html):
 
 '''получаем контент'''
 def get_content (html, equipment):
+    soup = BeautifulSoup(html, 'html.parser')
+    items = soup.find_all('li', class_='b-catalog-items-item b1c-ajax')
+    for item in items:
+        title_value = item.find('a', class_='b-catalog-items-item__link').get_text(strip=True)
+        price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
+        equipment.append({
+            'title': title_value,
+            'price': price_value
+        })
+    return equipment
+
+
+'''сохраняем результаты в прайслист'''
+def save_file(items, path):
     pass
 
 
 '''запускаем'''
 def parse():
+
     html = get_html(URL)
     if html.status_code == 200:
         print('Доступ к html. Статус: Успешно')
+        get_content(html.text, equipment)
     else:
         print('Доступ к html. Статус: Ошибка')
 
