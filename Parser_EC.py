@@ -10,6 +10,8 @@ HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # сло�
 FILE = 'ob_EC.csv'
 
 equipment = []
+equipment_1 = []
+
 
 '''получаем html'''
 def get_html (url, params=None):
@@ -19,7 +21,12 @@ def get_html (url, params=None):
 
 '''получаем количество страниц'''
 def get_pages_count(html):
-    pass
+    soup = BeautifulSoup(html, 'html.parser')
+    pagination = soup.find_all('a', class_='b-catalog-pagination__link')
+    if pagination:
+        return int(pagination[-1].get_text())
+    else:
+        return 1
 
 
 '''получаем контент'''
@@ -30,24 +37,30 @@ def get_content (html, equipment):
         title_value = item.find('a', class_='b-catalog-items-item__link').get_text(strip=True)
         price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
         equipment.append({
-            'title': title_value,
-            'price': price_value
+            title_value: price_value
         })
-    return equipment
+    print(equipment)
 
 
 '''сохраняем результаты в прайслист'''
 def save_file(items, path):
-    pass
+    with open(path, 'w', newline='') as file:  # указываем путь, w значит запись
+        writer = csv.writer(file, delimiter=';')
+        writer.writerow(['Оборудование', 'Цена'])
+        for item in items:
+            writer.writerow([item['title'], item['price']])
 
 
 '''запускаем'''
 def parse():
-
     html = get_html(URL)
     if html.status_code == 200:
         print('Доступ к html. Статус: Успешно')
-        get_content(html.text, equipment)
+        pages_count = get_pages_count(html.text)
+        for page in range(1, pages_count + 1):
+            html = get_html(URL, params={'PAGEN_2': page})
+            equipment_1.extend(get_content(html.text, equipment))
+        save_file(equipment_1, FILE)
     else:
         print('Доступ к html. Статус: Ошибка')
 
