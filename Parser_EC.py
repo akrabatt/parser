@@ -39,16 +39,12 @@ def get_content (html, equipment):
         equipment.append({
             title_value: price_value
         })
-    print(equipment)
+    return equipment
 
 
 '''сохраняем результаты в прайслист'''
 def save_file(items, path):
-    with open(path, 'w', newline='') as file:  # указываем путь, w значит запись
-        writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Оборудование', 'Цена'])
-        for item in items:
-            writer.writerow([item['title'], item['price']])
+    pass
 
 
 '''запускаем'''
@@ -60,7 +56,8 @@ def parse():
         for page in range(1, pages_count + 1):
             html = get_html(URL, params={'PAGEN_2': page})
             equipment_1.extend(get_content(html.text, equipment))
-        save_file(equipment_1, FILE)
+            print(equipment_1)
+
     else:
         print('Доступ к html. Статус: Ошибка')
 
