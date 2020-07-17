@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-URL = 'https://stv39.ru/catalog/avtomatika_i_shchity/'  # указываем юрл адрес страницы которую будем парсить
+URL = 'https://stv39.ru/catalog/kabel/'  # указываем юрл адрес страницы которую будем парсить
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # словарь в котором мы отправляем заголовки, чтобы сервер не посчитал нас за ботов
                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',  # ищем их в разделе сеть кода страницы
            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/'
@@ -27,6 +27,7 @@ def get_pages_count(html):
         return int(pagination[-1].get_text())
     else:
         return 1
+    #AttributeError
 
 
 '''получаем контент'''
@@ -34,11 +35,24 @@ def get_content (html, equipment):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('li', class_='b-catalog-items-item b1c-ajax')
     for item in items:
-        title_value = item.find('a', class_='b-catalog-items-item__link').get_text(strip=True)
-        price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
-        equipment.append({
-            title_value: price_value
-        })
+        try:
+            title_value = item.find('a', class_='b-catalog-items-item__link').get_text(strip=True)
+            price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
+            link = item.find('a', class_='b-catalog-items-item__link').get('href')
+            equipment.append({
+                'title': title_value,
+                'price': price_value,
+                'link': link
+            })
+        except AttributeError:
+            price_value = item.find('a', class_='bx_bt_button bx_medium b-catalog-items-item-hover_'
+                                                '_to-notify bx-catalog-subscribe-button not-available-btn').get_text(strip=True)
+            # price_value = 'нет в наличии, товар под заказ'
+            equipment.append({
+                'title': title_value,
+                'price': price_value,
+                'link': link
+            })
     return equipment
 
 
