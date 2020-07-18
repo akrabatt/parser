@@ -8,6 +8,7 @@ HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # сло�
            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/'
                      'webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}  # словарь в котором мы отправим заголовки
 FILE = 'ob_EC.csv'
+HOST = 'https://stv39.ru'
 
 equipment = []
 equipment_1 = []
@@ -34,11 +35,12 @@ def get_pages_count(html):
 def get_content (html, equipment):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('li', class_='b-catalog-items-item b1c-ajax')
+
     for item in items:
         try:
+            link = HOST + item.find('a', class_='b-catalog-items-item__link').get('href')
             title_value = item.find('a', class_='b-catalog-items-item__link').get_text(strip=True)
-            price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
-            link = item.find('a', class_='b-catalog-items-item__link').get('href')
+            price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True).replace(' руб.', '')
             equipment.append({
                 'title': title_value,
                 'price': price_value,
@@ -58,7 +60,11 @@ def get_content (html, equipment):
 
 '''сохраняем результаты в прайслист'''
 def save_file(items, path):
-    pass
+    with open(path, 'w', newline='') as file:  # указываем путь, w значит запись
+        writer = csv.writer(file, delimiter=';')
+        writer.writerow(['Оборудование', 'Цена', 'ссылка'])
+        for item in items:
+            writer.writerow([item['title'], item['price'], item['link']])
 
 
 '''запускаем'''
@@ -71,7 +77,7 @@ def parse():
             html = get_html(URL, params={'PAGEN_2': page})
             equipment_1.extend(get_content(html.text, equipment))
             print(equipment_1)
-
+        save_file(equipment_1, FILE)
     else:
         print('Доступ к html. Статус: Ошибка')
 
