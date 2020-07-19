@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-URL = 'https://stv39.ru/catalog/kabel/'  # указываем юрл адрес страницы которую будем парсить
+URL = 'https://stv39.ru/catalog/avtomatika_i_shchity/'  # указываем юрл адрес страницы которую будем парсить
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # словарь в котором мы отправляем заголовки, чтобы сервер не посчитал нас за ботов
                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',  # ищем их в разделе сеть кода страницы
            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/'
@@ -67,6 +67,7 @@ def save_file(items, path):
             writer.writerow([item['title'], item['price'], item['link']])
 
 
+
 '''запускаем'''
 def parse():
     html = get_html(URL)
@@ -74,10 +75,12 @@ def parse():
         print('Доступ к html. Статус: Успешно')
         pages_count = get_pages_count(html.text)
         for page in range(1, pages_count + 1):
+            print(f'Парсинг страницы {page} из {pages_count}...')
             html = get_html(URL, params={'PAGEN_2': page})
             equipment_1.extend(get_content(html.text, equipment))
-            print(equipment_1)
-        save_file(equipment_1, FILE)
+            #print(equipment)
+        save_file(equipment, FILE)
+        print(len(equipment))
     else:
         print('Доступ к html. Статус: Ошибка')
 

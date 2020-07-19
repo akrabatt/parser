@@ -1,80 +1,94 @@
-import requests  # импортируем бибилиотеки для парсера
+import requests
 from bs4 import BeautifulSoup
 import csv
 
-URL = ''  # указываем юрл адрес страницы которую будем парсить
+URL = 'https://stv39.ru/catalog/avtomatika_i_shchity/'  # указываем юрл адрес страницы которую будем парсить
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # словарь в котором мы отправляем заголовки, чтобы сервер не посчитал нас за ботов
                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',  # ищем их в разделе сеть кода страницы
            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/'
                      'webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}  # словарь в котором мы отправим заголовки
 FILE = 'ob_EC.csv'
+HOST = 'https://stv39.ru'
 
-def get_html (url, params=None):  # 1 аргумент это юрл страницы с которой необходимо получить контент, парамс опциональный аргумент(по умолчанию ноль) передавать дополнительные аргументы
-    r = requests.get(url, headers=HEADERS, params=params)  # выполняем гет запрос, 1й пр. отпр переданный юрл, потом заголовки и параметры
-    return r  # возвращаем объект запроса и используем ниже в функции pars
+equipment = []
+equipment_1 = []
 
 
-def get_pages_count(html):  # функция принимает html который мы получили выше, функция узнает количество страниц
-    soup = BeautifulSoup(html, 'html.parser')  # объект с которым мы будем работать
-    pagination = soup.find_all('a', class_='b-catalog-pagination__link')  # создаём объект и получаем ссылки
-    if pagination:  # условие на проверку погинации есть ли оно
-        return int(pagination[-1].get_text())  # берем последний элемент (последнюю страницу)
+'''получаем html'''
+def get_html (url, params=None):
+    r = requests.get(url, headers=HEADERS, params=params)
+    return r
+
+
+'''получаем количество страниц'''
+def get_pages_count(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    pagination = soup.find_all('a', class_='b-catalog-pagination__link')
+    if pagination:
+        return int(pagination[-1].get_text())
     else:
         return 1
+    #AttributeError
 
-def get_content (html, obor):  # принимает html и распарсит
-    soup = BeautifulSoup(html, 'html.parser')  # создаём объект soup и обращаемся к конструктору, передаём ему параметры, из него создаются объекты пайтон к которым мы можем обращаться и работать
-    items = soup.find_all('li', class_='b-catalog-items-item b1c-ajax')   # получаем объекты items и для этого обращаемся к soup к методу find_all который позволяет получить коллекцию
+
+'''получаем контент'''
+def get_content (html, equipment):
+    soup = BeautifulSoup(html, 'html.parser')
+    items = soup.find_all('li', class_='b-catalog-items-item b1c-ajax')
 
     for item in items:
         try:
+            link = HOST + item.find('a', class_='b-catalog-items-item__link').get('href')
             title_value = item.find('a', class_='b-catalog-items-item__link').get_text(strip=True)
-            price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
-            # print(title_value, price_value)
-            # print(type(title_value), type(price_value))
-            obor.append({
+            price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True).replace(' руб.', '')
+            equipment.append({
                 'title': title_value,
-                'price': price_value
+                'price': price_value,
+                'link': link
             })
-        except Exception as e:
-            # e = 'price is absent: '
-            # print(e, title_value)
-            # price_value = item.find('div', class_='bx_price b-catalog-items-item__price').get_text(strip=True)
-            price_value = 'Unknown'
-            obor.append({
+        except AttributeError:
+            price_value = item.find('a', class_='bx_bt_button bx_medium b-catalog-items-item-hover_'
+                                                '_to-notify bx-catalog-subscribe-button not-available-btn').get_text(strip=True)
+            # price_value = 'нет в наличии, товар под заказ'
+            equipment.append({
                 'title': title_value,
-                'price': price_value
+                'price': price_value,
+                'link': link
             })
-    return obor
+    return equipment
 
 
-def save_file(items, path):  # функция сохранения в файл
+'''сохраняем результаты в прайслист'''
+def save_file(items, path):
     with open(path, 'w', newline='') as file:  # указываем путь, w значит запись
         writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Оборудование', 'Цена'])
+        writer.writerow(['Оборудование', 'Цена', 'ссылка'])
         for item in items:
-            writer.writerow([item['title'], item['price']])
+            writer.writerow([item['title'], item['price'], item['link']])
 
 
 
-def parse():  # осн функция в ней будет вызываться всё
-    URL = input('введите URL: ')
-    URL = URL.strip()
-    obor = []
-    html = get_html(URL)  # создаём переменную и вызываем функцию, ей передаём юрл параметр
-    if html.status_code == 200:  # 200 это значит что мы достучались до страницы
-        print('достучались')
-        obor1 = []
+'''запускаем'''
+def parse():
+    html = get_html(URL)
+    if html.status_code == 200:
+        print('Доступ к html. Статус: Успешно')
         pages_count = get_pages_count(html.text)
         for page in range(1, pages_count + 1):
-            print(f'парсинг страницы {page} из {pages_count}...')  # цикл создан для того чтобы пропарсить все страницы
+            print(f'Парсинг страницы {page} из {pages_count}...')
             html = get_html(URL, params={'PAGEN_2': page})
-            obor1.extend(get_content(html.text, obor))
-        save_file(obor1, FILE)
-        print(f'получено {len(obor1)} оборудования')
-
-            #obor = get_content(html.text)  # вызываем гет контент и передаем ему html и текст, те html готовый с которым будет работать
+            equipment_1.extend(get_content(html.text, equipment))
+            #print(equipment)
+        save_file(equipment, FILE)
+        print(len(equipment))
     else:
-        print('что то не то')
+        print('Доступ к html. Статус: Ошибка')
+
 
 parse()
+
+
+
+
+
+
