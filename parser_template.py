@@ -1,17 +1,20 @@
 import requests
 from bs4 import BeautifulSoup
-import csv
+import xlwt
 
-URL = 'https://stv39.ru/catalog/avtomatika_i_shchity/'  # указываем юрл адрес страницы которую будем парсить
+URL = 'https://stv39.ru/catalog/kabel/'  # указываем юрл адрес страницы которую будем парсить
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # словарь в котором мы отправляем заголовки, чтобы сервер не посчитал нас за ботов
                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',  # ищем их в разделе сеть кода страницы
            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/'
                      'webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}  # словарь в котором мы отправим заголовки
-FILE = 'ob_EC.csv'
+FILE = 'eq_EC.csv'
 HOST = 'https://stv39.ru'
 
 equipment = []
 equipment_1 = []
+
+book_for_write = xlwt.Workbook('utf8')  # создаём книгу
+sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ')  # создаём лист в этой книге
 
 
 '''получаем html'''
@@ -58,16 +61,6 @@ def get_content (html, equipment):
     return equipment
 
 
-'''сохраняем результаты в прайслист'''
-def save_file(items, path):
-    with open(path, 'w', newline='') as file:  # указываем путь, w значит запись
-        writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Оборудование', 'Цена', 'ссылка'])
-        for item in items:
-            writer.writerow([item['title'], item['price'], item['link']])
-
-
-
 '''запускаем'''
 def parse():
     html = get_html(URL)
@@ -78,8 +71,7 @@ def parse():
             print(f'Парсинг страницы {page} из {pages_count}...')
             html = get_html(URL, params={'PAGEN_2': page})
             equipment_1.extend(get_content(html.text, equipment))
-            #print(equipment)
-        save_file(equipment, FILE)
+            print(equipment)
         print(len(equipment))
     else:
         print('Доступ к html. Статус: Ошибка')
@@ -87,8 +79,20 @@ def parse():
 
 parse()
 
+'''запись файла'''
+print(len(equipment))
 
-
-
+# a = 0
+# for i in range(len(equipment)):
+#     title = equipment[i]['title']
+#     price = equipment[i]['price']
+#     link = equipment[i]['link']
+#     sheet_for_write.write(a, 0, title)
+#     sheet_for_write.write(a, 1, price)
+#     sheet_for_write.write(a, 2, link)
+#     a += 1
+# 
+# book_for_write.save('{0}.xls'.format(FILE))  # сохраняем книгу
+# print('файл сохранён')
 
 
