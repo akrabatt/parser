@@ -72,6 +72,18 @@ def get_content (html, equipment):
     return equipment
 
 
+def save_file(eq):
+    a = 0
+    for i in range(len(equipment)):
+        title = equipment[i]['title']
+        price = equipment[i]['price']
+        link = equipment[i]['link']
+        sheet_for_write.write(a, 0, title)
+        sheet_for_write.write(a, 1, price)
+        sheet_for_write.write(a, 2, link)
+        a += 1
+
+
 '''запускаем'''
 def parse():
     for u in range(len(URL)):
@@ -83,28 +95,20 @@ def parse():
                 print(f'Парсинг страницы {page} из {pages_count}...')
                 html = get_html(URL[u], params={'PAGEN_2': page})
                 equipment_1.extend(get_content(html.text, equipment))
-                #print(equipment)
             print(len(equipment))
         else:
             print('Доступ к html. Статус: Ошибка')
+    save_file(equipment)
+    book_for_write.save('{0}.xls'.format(FILE))  # сохраняем книгу
+    print('файл сохранён')
 
 
 parse()
 
-'''запись файла'''
-print(len(equipment))
 
-a = 0
-for i in range(len(equipment)):
-    title = equipment[i] ['title']
-    price = equipment[i] ['price']
-    link = equipment[i] ['link']
-    sheet_for_write.write(a, 0, title)
-    sheet_for_write.write(a, 1, price)
-    sheet_for_write.write(a, 2, link)
-    a += 1
 
-book_for_write.save('{0}.xls'.format(FILE))  # сохраняем книгу
-print('файл сохранён')
+
+
+
 
 
