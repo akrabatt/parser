@@ -49,7 +49,6 @@ def get_pages_count(html):
 def get_content (html, equipment):
     soup = BeautifulSoup(html, 'html.parser')
     items = soup.find_all('li', class_='b-catalog-items-item b1c-ajax')
-
     for item in items:
         try:
             link = HOST + item.find('a', class_='b-catalog-items-item__link').get('href')
