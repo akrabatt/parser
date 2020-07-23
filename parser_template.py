@@ -7,7 +7,7 @@ HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # сло�
                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',  # ищем их в разделе сеть кода страницы
            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/'
                      'webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'}  # словарь в котором мы отправим заголовки
-FILE = 'eq_EC.csv'
+FILE = 'eq_EC'
 HOST = 'https://stv39.ru'
 
 equipment = []

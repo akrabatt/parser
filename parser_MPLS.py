@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import xlrd
 import xlwt
+
 
 URL = [
     # 'https://www.megapolys.com/catalog/stroitelnye_materialy/',
@@ -28,12 +28,11 @@ HEADERS = {
               ',image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9'
 }
 
-FILE = ''
+FILE = 'eq_MPLS.xls'
 HOST = 'https://www.megapolys.com'
 
-book = xlrd.open_workbook('./eq_EC.csv.xls', formatting_info=True)
-sheet = book.sheet_by_index(0)
-sheet1 = xlwt.Workbook.sheet()
+book_for_write = xlwt.Workbook('utf8')  # создаём книгу
+sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ')  # создаём лист в этой книге
 
 equipment = []
 equipment_1 = []
@@ -56,7 +55,7 @@ def get_pages_count(html):
         return 1
 
 
-'''получаем контент ='''
+'''получаем контент'''
 def get_content(html, equipment):
 
     soup = BeautifulSoup(html, 'html.parser')
@@ -89,9 +88,9 @@ def save_in_file(eq):
         title = equipment[i]['title']
         price = equipment[i]['price']
         link = equipment[i]['link']
-        xlwt.sheet1.write(a, 4, title)
-        xlwt.sheet1.write(a, 5, price)
-        xlwt.sheet1.write(a, 6, link)
+        sheet_for_write.write(a, 0, title)
+        sheet_for_write.write(a, 1, price)
+        sheet_for_write.write(a, 2, link)
         a += 1
 
 
@@ -112,7 +111,9 @@ def parse():
         else:
             print('Доступ к html. Статус: Ошибка')
     save_in_file(equipment)
-    book.save()
+    book_for_write.save(FILE)
     print('файл сохранён')
 
+
 parse()
+
