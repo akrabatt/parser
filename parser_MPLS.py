@@ -6,19 +6,19 @@ import xlwt
 URL = [
     # 'https://www.megapolys.com/catalog/stroitelnye_materialy/',
     # 'https://www.megapolys.com/catalog/tovary_dlya_dachi_i_sada/',
-    'https://www.megapolys.com/catalog/elektrooborudovanie/',
-    'https://www.megapolys.com/catalog/otoplenie_i_vodosnabzhenie/',
-    'https://www.megapolys.com/catalog/napolnye_pokrytiya/',
+    # 'https://www.megapolys.com/catalog/elektrooborudovanie/',  # надо
+    # 'https://www.megapolys.com/catalog/otoplenie_i_vodosnabzhenie/',  # надо
+    # 'https://www.megapolys.com/catalog/napolnye_pokrytiya/',  # надо
     # 'https://www.megapolys.com/catalog/tovary_dlya_doma_i_byta/',
     # 'https://www.megapolys.com/catalog/dekorativno_otdelochnye_materialy/',
     # 'https://www.megapolys.com/catalog/stolyarnye_izdeliya/',
     # 'https://www.megapolys.com/catalog/santekhnika/',
-    'https://www.megapolys.com/catalog/instrumenty_tekhnika/',
+    # 'https://www.megapolys.com/catalog/instrumenty_tekhnika/',   # надо
     # 'https://www.megapolys.com/catalog/avtotovary/',
-    'https://www.megapolys.com/catalog/osveshchenie/',
+    # 'https://www.megapolys.com/catalog/osveshchenie/',  # надо
     # 'https://www.megapolys.com/catalog/plitka/',
-    'https://www.megapolys.com/catalog/tekhnicheskie_sredstva_bezopasnosti/',
-    'https://www.megapolys.com/catalog/tekhno_siti_1/'
+    'https://www.megapolys.com/catalog/tekhnicheskie_sredstva_bezopasnosti/',  # надо
+    # 'https://www.megapolys.com/catalog/tekhno_siti_1/'  # надо
 ]
 
 HEADERS = {

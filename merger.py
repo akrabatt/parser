@@ -12,3 +12,17 @@ sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ')  # соз
 vals1 = [sheet1.row_values(rownum) for rownum in range(sheet1.nrows)]
 vals2 = [sheet2.row_values(rownum) for rownum in range(sheet2.nrows)]
 
+
+for i in range(len(vals1)):
+    sheet_for_write.write(i, 0, vals1[i][0])
+    sheet_for_write.write(i, 1, vals1[i][1])
+    sheet_for_write.write(i, 2, vals1[i][2])
+
+
+for i in range(len(vals2)):
+    sheet_for_write.write(i, 4, vals2[i][0])
+    sheet_for_write.write(i, 5, vals2[i][1])
+    sheet_for_write.write(i, 6, vals2[i][2])
+
+
+book_for_write.save('test.xls')
