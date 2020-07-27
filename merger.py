@@ -17,12 +17,14 @@ for i in range(len(vals1)):
     sheet_for_write.write(i, 0, vals1[i][0])
     sheet_for_write.write(i, 1, vals1[i][1])
     sheet_for_write.write(i, 2, vals1[i][2])
+    sheet_for_write.write(i, 3, '-')
 
 
 for i in range(len(vals2)):
     sheet_for_write.write(i, 4, vals2[i][0])
     sheet_for_write.write(i, 5, vals2[i][1])
     sheet_for_write.write(i, 6, vals2[i][2])
+    sheet_for_write.write(i, 7, '-')
 
 
 book_for_write.save('test.xls')
