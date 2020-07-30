@@ -6,19 +6,19 @@ import xlwt
 URL = [
     # 'https://www.megapolys.com/catalog/stroitelnye_materialy/',
     # 'https://www.megapolys.com/catalog/tovary_dlya_dachi_i_sada/',
-    'https://www.megapolys.com/catalog/elektrooborudovanie/',  # надо
-    'https://www.megapolys.com/catalog/otoplenie_i_vodosnabzhenie/',  # надо
-    'https://www.megapolys.com/catalog/napolnye_pokrytiya/',  # надо
+    # 'https://www.megapolys.com/catalog/elektrooborudovanie/',  # надо (325)
+    # 'https://www.megapolys.com/catalog/otoplenie_i_vodosnabzhenie/',  # надо (240)
+    # 'https://www.megapolys.com/catalog/napolnye_pokrytiya/',  # надо (71)
     # 'https://www.megapolys.com/catalog/tovary_dlya_doma_i_byta/',
     # 'https://www.megapolys.com/catalog/dekorativno_otdelochnye_materialy/',
     # 'https://www.megapolys.com/catalog/stolyarnye_izdeliya/',
     # 'https://www.megapolys.com/catalog/santekhnika/',
-    'https://www.megapolys.com/catalog/instrumenty_tekhnika/',   # надо
+    # 'https://www.megapolys.com/catalog/instrumenty_tekhnika/',   # надо (248)
     # 'https://www.megapolys.com/catalog/avtotovary/',
-    'https://www.megapolys.com/catalog/osveshchenie/',  # надо
-    # 'https://www.megapolys.com/catalog/plitka/',
-    'https://www.megapolys.com/catalog/tekhnicheskie_sredstva_bezopasnosti/',  # надо
-    'https://www.megapolys.com/catalog/tekhno_siti_1/'  # надо
+    # 'https://www.megapolys.com/catalog/osveshchenie/',  # надо (367)
+    'https://www.megapolys.com/catalog/plitka/',
+    # 'https://www.megapolys.com/catalog/tekhnicheskie_sredstva_bezopasnosti/',  # надо (40)
+    # 'https://www.megapolys.com/catalog/tekhno_siti_1/'  # надо (83)
 ]
 
 HEADERS = {
@@ -115,5 +115,7 @@ def parse2():
     print('файл сохранён')
 
 
-# parse2()
+if __name__ == '__main__':
+    parse2()
+
 

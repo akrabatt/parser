@@ -34,5 +34,5 @@ for i in range(len(vals2)):
 
 
 book_for_write.save('EC_MPLS.xls')
-os.remove('./eq_EC.xls.xls')
-os.remove('./eq_MPLS.xls')
+# os.remove('./eq_EC.xls.xls')
+# os.remove('./eq_MPLS.xls')
