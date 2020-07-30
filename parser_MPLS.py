@@ -32,7 +32,7 @@ FILE = 'eq_MPLS.xls'
 HOST = 'https://www.megapolys.com'
 
 book_for_write = xlwt.Workbook('utf8')  # создаём книгу
-sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ')  # создаём лист в этой книге
+sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ_MPLS')  # создаём лист в этой книге
 
 equipment = []
 equipment_1 = []
@@ -96,7 +96,7 @@ def save_in_file(eq):
 
 
 '''основная функция'''
-def parse():
+def parse2():
     for u in range(len(URL)):
         html = get_html(URL[u])
         if html.status_code == 200:
@@ -115,5 +115,5 @@ def parse():
     print('файл сохранён')
 
 
-parse()
+# parse2()
 

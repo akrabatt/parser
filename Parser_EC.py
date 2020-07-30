@@ -27,7 +27,7 @@ equipment = []
 equipment_1 = []
 
 book_for_write = xlwt.Workbook('utf8')  # создаём книгу
-sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ')  # создаём лист в этой книге
+sheet_for_write = book_for_write.add_sheet('ОБОРУДОВАНИЕ_EC')  # создаём лист в этой книге
 
 
 '''получаем html'''
@@ -87,7 +87,7 @@ def save_file(eq):
 
 
 '''запускаем'''
-def parse():
+def parse1():
     for u in range(len(URL)):
         html = get_html(URL[u])
         if html.status_code == 200:
@@ -105,7 +105,7 @@ def parse():
     print('файл сохранён')
 
 
-parse()
+# parse1()
 
 
 
