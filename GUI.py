@@ -61,39 +61,35 @@ def end():
     try:
         for i in range(len(equipment)):
             for b in range(len(vals1)):
+
                 if equipment[i] in vals1[b][0]:
                     equipment1.append(vals1[b])  # отправная точка, есть элементы
+            if len(equipment1) == 0:
+                for c in range(len(vals2)):
+                    if equipment[i] in vals2[c][0]:
+                        equipment1.append(vals2[c])
 
-            if len(equipment1) > 1:
+            if len(equipment1) > 1:  # проверяем на количество
                 if int(equipment1[0][1]) > int(equipment1[1][1]):
                     equipment2.append(equipment1[0])
                     equipment1.clear()
-                else:
+                elif int(equipment1[0][1]) < int(equipment1[1][1]):
                     equipment2.append(equipment1[1])
+                    equipment1.clear()
+                elif int(equipment1[0][1]) == int(equipment1[1][1]):
+                    equipment2.append(equipment1[0])
                     equipment1.clear()
             elif len(equipment1) < 2:
                 equipment2.append(equipment1[0])
                 equipment1.clear()
         print(equipment2)
-        # create_and_save(equipment2)
+        create_and_save(equipment2)
     except:
-        for i in range(len(equipment)):
-            for b in range(len(vals2)):
-                if equipment[i] in vals2[b][0]:
-                    equipment1.append(vals2[b])  # отправная точка, есть элементы
+        pass
+        # for c in range(len(vals2)):
+        #     if equipment[i] in vals2[c][0]:
+        #         equipment2.append(vals2[c])
 
-            if len(equipment1) > 1:
-                if int(equipment1[0][1]) > int(equipment1[1][1]):
-                    equipment2.append(equipment1[0])
-                    equipment1.clear()
-                else:
-                    equipment2.append(equipment1[1])
-                    equipment1.clear()
-            elif len(equipment1) < 2:
-                equipment2.append(equipment1[0])
-                equipment1.clear()
-        print(equipment2)
-        # create_and_save(equipment2)
     create_and_save(equipment2)
 
 
