@@ -17,6 +17,7 @@ vals2 = [sheet2.row_values(rownum) for rownum in range(sheet2.nrows)]
 equipment = []
 equipment1 = []
 equipment2 = []
+value = []
 
 # create app
 app = QtWidgets.QApplication(sys.argv)
@@ -28,15 +29,20 @@ ui.setupUi(Dialog)
 Dialog.show()
 
 # создание эксельки и занесение в нее данных из конечного списка
-def create_and_save(equipment2):
+def create_and_save(equipment2, value):
     book_for_write = xlwt.Workbook('utf8')  # создаём книгу
     sheet_for_write = book_for_write.add_sheet('test')  # создаём лист в этой книге
 
     for i in range(len(equipment2)):
         sheet_for_write.write(i, 0, equipment2[i][0])
-        sheet_for_write.write(i, 1, equipment2[i][1])
-        sheet_for_write.write(i, 2, equipment2[i][2])
-        sheet_for_write.write(i, 3, '-')
+        if len(equipment2[i][1]) >= 5:
+            sheet_for_write.write(i, 1, float(equipment2[i][1].replace(' ', '')) * float(value[i]))
+        elif len(equipment2[i][1]) < 4:
+            sheet_for_write.write(i, 1, float(equipment2[i][1]) * float(value[i]))
+        sheet_for_write.write(i, 2, value[i])
+        sheet_for_write.write(i, 3, 'шт')
+        sheet_for_write.write(i, 4, equipment2[i][2])
+        sheet_for_write.write(i, 5, '-')
 
     book_for_write.save('test.xls')
 
@@ -45,10 +51,15 @@ def create_and_save(equipment2):
 # обработка кнопки "добавить" при нажатии считывает строку и добавляет в список
 def get_equipment():
     eq = ui.lineEdit.text()
+    eq_2 = ui.lineEdit_2.text()
     equipment.append(eq)
-    # print(equipment)
+    if eq_2 == '':
+        value.append('1')
+    else:
+        value.append(eq_2)
     ui.lineEdit.clear()
-    return equipment
+    ui.lineEdit_2.clear()
+    return equipment, value
 
 
 # Вставка ППНИ-37 габарит 2 160А ИЭК
@@ -58,39 +69,35 @@ def get_equipment():
 
 # обработка кнопки "закончить" начинает поочередный поиск добавленного оборудования в эксельке
 def end():
-    try:
-        for i in range(len(equipment)):
-            for b in range(len(vals1)):
+    for i in range(len(equipment)):
+        for b in range(len(vals1)):
+            if equipment[i] in vals1[b][0]:
+                equipment1.append(vals1[b])  # отправная точка, есть элементы
 
-                if equipment[i] in vals1[b][0]:
-                    equipment1.append(vals1[b])  # отправная точка, есть элементы
-            if len(equipment1) == 0:
-                for c in range(len(vals2)):
-                    if equipment[i] in vals2[c][0]:
-                        equipment1.append(vals2[c])
+        if len(equipment1) == 0:
+            for c in range(len(vals2)):
+                if equipment[i] in vals2[c][0]:
+                    equipment1.append(vals2[c])
+        if len(equipment1) == 0:
+            equipment1.append(['not found', '0', 'not found'])
 
-            if len(equipment1) > 1:  # проверяем на количество
-                if int(equipment1[0][1]) > int(equipment1[1][1]):
-                    equipment2.append(equipment1[0])
-                    equipment1.clear()
-                elif int(equipment1[0][1]) < int(equipment1[1][1]):
-                    equipment2.append(equipment1[1])
-                    equipment1.clear()
-                elif int(equipment1[0][1]) == int(equipment1[1][1]):
-                    equipment2.append(equipment1[0])
-                    equipment1.clear()
-            elif len(equipment1) < 2:
+        if len(equipment1) > 1:  # проверяем на количество
+            if float(equipment1[0][1]) > float(equipment1[1][1]):
                 equipment2.append(equipment1[0])
                 equipment1.clear()
-        print(equipment2)
-        create_and_save(equipment2)
-    except:
-        pass
-        # for c in range(len(vals2)):
-        #     if equipment[i] in vals2[c][0]:
-        #         equipment2.append(vals2[c])
+            elif float(equipment1[0][1]) < float(equipment1[1][1]):
+                equipment2.append(equipment1[1])
+                equipment1.clear()
+            elif float(equipment1[0][1]) == float(equipment1[1][1]):
+                equipment2.append(equipment1[0])
+                equipment1.clear()
+        elif len(equipment1) < 2:
+            equipment2.append(equipment1[0])
+            equipment1.clear()
+    create_and_save(equipment2, value)
 
-    create_and_save(equipment2)
+
+    create_and_save(equipment2, value)
 
 
 # конектимся с кнопками
