@@ -97,9 +97,6 @@ def end():
     create_and_save(equipment2, value)
 
 
-    create_and_save(equipment2, value)
-
-
 # конектимся с кнопками
 ui.pushButton.clicked.connect(get_equipment)
 # ui.pushButton_2.clicked.connect(QCoreApplication.instance().quit)
