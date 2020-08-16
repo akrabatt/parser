@@ -1,20 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
 import xlwt
+import os
 
 
 URL = [
-        # 'https://stv39.ru/catalog/avtomatika_i_shchity/',
-        # 'https://stv39.ru/catalog/kabel/',
-        # 'https://stv39.ru/catalog/lampy/',
-        # 'https://stv39.ru/catalog/osvetitelnoe_oborudovanie/',
+        'https://stv39.ru/catalog/avtomatika_i_shchity/',
+        'https://stv39.ru/catalog/kabel/',
+        'https://stv39.ru/catalog/lampy/',
+        'https://stv39.ru/catalog/osvetitelnoe_oborudovanie/',
         'https://stv39.ru/catalog/izmeritelnye_pribory_i_instrumenty/',
-        # 'https://stv39.ru/catalog/elektro_ustanovochnye_izdeliya/',
-        # 'https://stv39.ru/catalog/instrumenty/',
-        # 'https://stv39.ru/catalog/klimat_kontrol/',
-        # 'https://stv39.ru/catalog/bytovye_i_sadovye_tovary/',
-        # 'https://stv39.ru/catalog/elektromontazhnye_izdeliya_i_kabelnye_sistemy/',
-        # 'https://stv39.ru/catalog/stroitelnoe_oborudovanie_osnastka_i_materialy/'
+        'https://stv39.ru/catalog/elektro_ustanovochnye_izdeliya/',
+        'https://stv39.ru/catalog/instrumenty/',
+        'https://stv39.ru/catalog/klimat_kontrol/',
+        'https://stv39.ru/catalog/bytovye_i_sadovye_tovary/',
+        'https://stv39.ru/catalog/elektromontazhnye_izdeliya_i_kabelnye_sistemy/',
+        'https://stv39.ru/catalog/stroitelnoe_oborudovanie_osnastka_i_materialy/'
        ]  # указываем юрл адрес страницы которую будем парсить
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '  # словарь в котором мы отправляем заголовки, чтобы сервер не посчитал нас за ботов
                          'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',  # ищем их в разделе сеть кода страницы
@@ -101,7 +102,8 @@ def parse1():
         else:
             print('Доступ к html. Статус: Ошибка')
     save_file(equipment)
-    book_for_write.save('{0}.xls'.format(FILE))  # сохраняем книгу
+    os.mkdir('mpls_ec')
+    book_for_write.save('./mpls_ec/{0}'.format(FILE))  # сохраняем книгу
     print('файл сохранён')
 
 

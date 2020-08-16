@@ -7,8 +7,8 @@ if __name__ == '__main__':
     Parser_EC.parse1()
     parser_MPLS.parse2()
 
-    work_book1 = xlrd.open_workbook('./eq_EC.xls.xls', formatting_info=True)
-    work_book2 = xlrd.open_workbook('./eq_MPLS.xls', formatting_info=True)
+    work_book1 = xlrd.open_workbook('./mpls_ec/eq_EC.xls', formatting_info=True)
+    work_book2 = xlrd.open_workbook('./mpls_ec/eq_MPLS.xls', formatting_info=True)
 
     sheet1 = work_book1.sheet_by_index(0)
     sheet2 = work_book2.sheet_by_index(0)
